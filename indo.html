@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>تسجيل الدخول</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f8fc;          /* قريب من خلفية صفحات جوجل */
+      --card: #ffffff;
+      --text: #1f1f1f;
+      --muted: #5f6368;       /* رمادي جوجل */
+      --primary: #1a73e8;     /* أزرق جوجل */
+      --primary-pressed:#1558ad;
+      --error: #d93025;
+      --border: #e0e3e7;
+      --focus: #1a73e8;
+      --shadow: 0 10px 24px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: "Cairo", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .g-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .g-dot.blue { background:#1a73e8 }
+    .g-dot.red { background:#ea4335 }
+    .g-dot.yellow { background:#fbbc05 }
+    .g-dot.green { background:#34a853 }
+
+    .card {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .illustration {
+      background: linear-gradient(135deg, #f4f8ff 0%, #eef3ff 100%);
+      padding: 32px;
+      display: grid; align-content: center;
+    }
+    .illustration h1 { margin: 0 0 8px; font-size: 28px; font-weight: 700; }
+    .illustration p { margin: 0; color: var(--muted); line-height: 1.7; }
+    .badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background:#fff; border:1px solid var(--border); padding:6px 10px; border-radius: 999px;
+      width: fit-content; box-shadow: 0 4px 12px rgba(0,0,0,.06);
+      margin-bottom: 16px; color: var(--muted); font-size: 12px;
+    }
+
+    form {
+      padding: 32px; position: relative; min-height: 420px;
+      display: grid; align-content: start; gap: 16px;
+    }
+
+    .brand {
+      display:flex; align-items:center; gap:12px; justify-content:center; margin-bottom: 12px;
+    }
+    .pseudo-logo {
+      width: 36px; height: 36px; border-radius: 8px; display:grid; place-items:center; font-weight:800;
+    }
+
+    .title { text-align:center; margin:0; font-size: 22px; }
+    .subtitle { text-align:center; color: var(--muted); margin:0 0 10px; font-size: 14px; }
+
+    .field { position: relative; }
+    .label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display:block; }
+    .input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      font-size: 15px;
+      background: #fff;
+    }
+    .input:focus { border-color: var(--focus); box-shadow: 0 0 0 3px rgba(26,115,232,.14); }
+
+    .row { display:flex; align-items:center; justify-content:space-between; gap: 12px; }
+    .link { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+    .btn { width: 100%; border: none; cursor:pointer; border-radius: 12px; padding: 12px 14px; font-size: 15px; font-weight:700; }
+    .btn.primary { background: var(--primary); color: #fff; }
+    .btn.primary:active { background: var(--primary-pressed); }
+    .btn.neutral { background: #fff; border: 1px solid var(--border); }
+
+    .with-divider { display:grid; gap: 12px; }
+    .divider { display:flex; align-items:center; gap:12px; color: var(--muted); font-size: 12px; }
+    .divider::before, .divider::after { content:""; height:1px; background: var(--border); flex:1; }
+
+    .error { color: var(--error); font-size: 13px; min-height: 18px; }
+    .success { color: #1e8e3e; font-size: 13px; min-height: 18px; }
+
+    .oauth-btn { display:flex; align-items:center; justify-content:center; gap:10px; }
+    .g-icon { width:35px; height:35px; border-radius: 10px; }
+
+    .footer-note { text-align:center; color: var(--muted); font-size: 12px; }
+
+    .spinner { width: 18px; height: 18px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; display: none; animation: spin 0.8s linear infinite; }
+    .loading .spinner { display:inline-block; }
+    .loading .btn-text { opacity:.7 }
+    @keyframes spin { to { transform: rotate(1turn);} }
+
+    @media (max-width: 860px){
+      .card { grid-template-columns: 1fr; }
+      .illustration { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header" aria-hidden="true">
+      <span class="g-dot blue"></span>
+      <span class="g-dot red"></span>
+      <span class="g-dot yellow"></span>
+      <span class="g-dot green"></span>
+      <span>تجربة دخول حديثة</span>
+    </div>
+
+    <div class="card" role="region" aria-label="نموذج تسجيل الدخول">
+      <div class="illustration">
+        <div class="badge"><span class="g-dot blue"></span> آمن وسريع باستخدام Firebase</div>
+        <h1>مرحبًا بعودتك 👋</h1>
+        <p>سجّل دخولك باستخدام البريد وكلمة المرور أو عبر حساب Google. 
+        </p>
+      </div>
+
+      <form id="auth-form" novalidate>
+        <div class="brand">
+         <div>
+            <h2 class="title">تسجيل الدخول</h2>
+            <p class="subtitle">استخدم حسابك للمتابعة</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label" for="email">البريد الإلكتروني</label>
+          <input id="email" class="input" type="email" placeholder="name@example.com" autocomplete="email" required />
+        </div>
+
+        <div class="field">
+          <label class="label" for="password">كلمة المرور</label>
+          <div style="position:relative">
+            <input id="password" class="input" type="password" placeholder="••••••••" autocomplete="current-password" required />
+            <button type="button" id="togglePass" aria-label="إظهار/إخفاء" style="position:absolute; inset-inline-end:8px; inset-block-start:8px; border:none; background:transparent; cursor:pointer; color:var(--muted)">إظهار</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <label style="display:flex; align-items:center; gap:8px; color:var(--muted); font-size: 13px;">
+            <input id="remember" type="checkbox" /> تذكّرني
+          </label>
+          <a class="link" href="#" id="forgot">هل نسيت كلمة المرور؟</a>
+        </div>
+
+        <div class="error" id="error"></div>
+        <div class="success" id="success"></div>
+
+        <button id="emailBtn" class="btn primary oauth-btn" type="submit">
+          <span class="spinner" aria-hidden="true"></span>
+          <span class="btn-text">تسجيل الدخول</span>
+        </button>
+
+        <div class="with-divider">
+          <div class="divider">أو</div>
+          <button id="googleBtn" class="btn neutral oauth-btn" type="button">
+            
+     
+            <span>المتابعة باستخدام Google</span>
+          </button>
+        </div>
+
+        <div class="footer-note">
+          ليس لديك حساب؟ <a class="link" href="#" id="switchMode">إنشاء حساب جديد</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs (v10 modular) -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, setPersistence, browserLocalPersistence, browserSessionPersistence, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+
+    // 1) ضع إعدادات مشروعك هنا (من Firebase Console > Project settings > General)
+   const firebaseConfig = {
+  apiKey: "AIzaSyDfWFwf6aTMBdgqDXXyt--Cyy-ZGL0bpmc",
+  authDomain: "ahmed-samir-6fbdf.firebaseapp.com",
+  databaseURL: "https://ahmed-samir-6fbdf-default-rtdb.firebaseio.com",
+  projectId: "ahmed-samir-6fbdf",
+  storageBucket: "ahmed-samir-6fbdf.firebasestorage.app",
+  messagingSenderId: "876170853490",
+  appId: "1:876170853490:web:825152d54d8f21898e16eb",
+  measurementId: "G-BZY09TCPLP"
+};
+
+
+    // 2) تهيئة التطبيق والمصادقة
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // عناصر الواجهة
+    const form = document.getElementById('auth-form');
+    const switchMode = document.getElementById('switchMode');
+    const googleBtn = document.getElementById('googleBtn');
+    const emailBtn = document.getElementById('emailBtn');
+    const forgot = document.getElementById('forgot');
+    const togglePass = document.getElementById('togglePass');
+    const emailInput = document.getElementById('email');
+    const passInput = document.getElementById('password');
+    const remember = document.getElementById('remember');
+    const errorEl = document.getElementById('error');
+    const successEl = document.getElementById('success');
+
+    let mode = 'login'; // أو 'signup'
+
+    function setLoading(loading) {
+      form.classList.toggle('loading', loading);
+      emailBtn.disabled = loading;
+      googleBtn.disabled = loading;
+    }
+
+    function showError(msg) {
+      errorEl.textContent = msg || '';
+      successEl.textContent = '';
+    }
+    function showSuccess(msg) {
+      successEl.textContent = msg || '';
+      errorEl.textContent = '';
+    }
+
+    // تبديل إظهار/إخفاء كلمة المرور
+    togglePass.addEventListener('click', () => {
+      const isPassword = passInput.type === 'password';
+      passInput.type = isPassword ? 'text' : 'password';
+      togglePass.textContent = isPassword ? 'إخفاء' : 'إظهار';
+      passInput.focus();
+    });
+
+    // تبديل وضع الدخول/التسجيل
+    switchMode.addEventListener('click', (e) => {
+      e.preventDefault();
+      mode = mode === 'login' ? 'signup' : 'login';
+      document.querySelector('.title').textContent = mode === 'login' ? 'تسجيل الدخول' : 'إنشاء حساب';
+      document.querySelector('.subtitle').textContent = mode === 'login' ? 'استخدم حسابك للمتابعة' : 'أنشئ حسابًا جديدًا للمتابعة';
+      emailBtn.querySelector('.btn-text').textContent = mode === 'login' ? 'تسجيل الدخول' : 'إنشاء الحساب';
+      switchMode.textContent = mode === 'login' ? 'إنشاء حساب جديد' : 'لديك حساب؟ سجّل الدخول';
+      showError(''); showSuccess('');
+    });
+
+    // اختيار نوع بقاء الجلسة بناءً على "تذكّرني"
+    async function applyPersistence() {
+      await setPersistence(auth, remember.checked ? browserLocalPersistence : browserSessionPersistence);
+    }
+
+    // إرسال رابط إعادة تعيين كلمة المرور
+    forgot.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (!emailInput.value) { return showError('من فضلك اكتب بريدك الإلكتروني أولًا.'); }
+      try {
+        setLoading(true);
+        await sendPasswordResetEmail(auth, emailInput.value);
+        showSuccess('تم إرسال رابط إعادة التعيين إلى بريدك.');
+      } catch (err) {
+        showError(mapAuthError(err));
+      } finally { setLoading(false); }
+    });
+
+    // تسجيل الدخول أو التسجيل بالبريد
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError(''); showSuccess('');
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+      if (!email || !password) return showError('من فضلك اكتب البريد وكلمة المرور.');
+
+      try {
+        setLoading(true);
+        await applyPersistence();
+        if (mode === 'login') {
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          await createUserWithEmailAndPassword(auth, email, password);
+        }
+        // تم الدخول
+        showSuccess('تم تسجيل الدخول بنجاح! سيتم نقلك الآن...');
+        // غيّر الرابط التالي لصفحتك بعد الدخول
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        showError(mapAuthError(err));
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // تسجيل الدخول عبر Google
+    googleBtn.addEventListener('click', async () => {
+      showError(''); showSuccess('');
+      try {
+        setLoading(true);
+        await applyPersistence();
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        window.location.href = 'dashboard.html';
+      } catch (err) {
+        showError(mapAuthError(err));
+      } finally { setLoading(false); }
+    });
+    
+
+    // إن كان المستخدم مسجلاً بالفعل
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // بالفعل مسجل دخول — يمكنك التوجيه مباشرة
+        // window.location.href = 'dashboard.html';
+      }
+    });
+
+    // تحسين رسائل أخطاء Firebase للعربية
+    function mapAuthError(err){
+      const code = err?.code || '';
+      const table = {
+        'auth/invalid-email': 'البريد الإلكتروني غير صالح.',
+        'auth/missing-password': 'من فضلك اكتب كلمة المرور.',
+        'auth/weak-password': 'كلمة المرور ضعيفة (٦ أحرف على الأقل).',
+        'auth/user-not-found': 'لا يوجد حساب بهذا البريد.',
+        'auth/wrong-password': 'كلمة المرور غير صحيحة.',
+        'auth/email-already-in-use': 'هذا البريد مستخدم بالفعل.',
+        'auth/popup-closed-by-user': 'تم إغلاق نافذة جوجل قبل إتمام العملية.',
+        'auth/popup-blocked': 'تم حظر نافذة جوجل من المتصفح.',
+      };
+      return table[code] || (err?.message || 'حدث خطأ غير متوقع.');
+    }
+  </script>
+</body>
+</html>
